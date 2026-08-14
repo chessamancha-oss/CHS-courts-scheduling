@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#102a27" />
+  <meta name="description" content="Reserve one of six Chelmsford High School tennis courts." />
+  <meta name="robots" content="index,follow" />
+  <meta property="og:title" content="CHS Courts — Tennis Reservations" />
+  <meta property="og:description" content="View availability and reserve one of six Chelmsford High School tennis courts." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://chelmsfordcourts.com/" />
+  <link rel="canonical" href="https://chelmsfordcourts.com/" />
+  <title>CHS Courts — Tennis Reservations</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='28' fill='%23d7e865'/%3E%3Cpath d='M10 21c16 5 28 17 34 33M53 12C43 24 29 29 10 24' fill='none' stroke='%23102a27' stroke-width='4'/%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="noise" aria-hidden="true"></div>
+
+  <header class="topbar">
+    <a class="brand" href="#top" aria-label="CHS Courts home">
+      <span class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 42 42"><circle cx="21" cy="21" r="17"/><path d="M9.3 13.5c8.1 2.8 16 10.5 19.2 19.2M32.7 9.3c-5.4 6.2-14 8.9-23.4 6.6"/></svg>
+      </span>
+      <span><strong>CHS</strong> Courts</span>
+    </a>
+    <nav class="nav-links" aria-label="Main navigation">
+      <a href="#schedule">Schedule</a>
+      <a href="#priority">Priority access</a>
+      <a href="#guidelines">Court rules</a>
+    </nav>
+    <a class="owner-link" href="/admin-login">Admin Portal</a>
+    <button class="button button-light header-book" id="headerBookButton" type="button">Book a court</button>
+  </header>
+
+  <main id="top">
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="hero-copy">
+        <div class="eyebrow"><span></span> Chelmsford High School · 100% free</div>
+        <h1 id="hero-title">Less waiting.<br /><em>More playing.</em></h1>
+        <p>Six CHS tennis courts, one shared schedule, and no fees. See what is open, reserve your time, and show up ready to rally.</p>
+        <div class="hero-actions">
+          <button class="button button-primary" id="heroBookButton" type="button">Find a court <span>↗</span></button>
+          <a class="text-link" href="#schedule">View today’s schedule <span>↓</span></a>
+        </div>
+        <div class="free-proof"><span>✓</span> No payment &nbsp;·&nbsp; No membership &nbsp;·&nbsp; Just tennis</div>
+      </div>
+
+      <div class="hero-visual" aria-label="Court availability summary">
+        <div class="sun-orbit" aria-hidden="true"></div>
+        <div class="court-illustration">
+          <span class="court-number">06</span>
+          <span class="court-label">CHS courts</span>
+          <div class="court-lines" aria-hidden="true">
+            <div class="net"></div><div class="service-line service-line-top"></div><div class="service-line service-line-bottom"></div>
+            <div class="center-line center-line-top"></div><div class="center-line center-line-bottom"></div>
+          </div>
+          <div class="ball ball-one" aria-hidden="true"></div><div class="ball ball-two" aria-hidden="true"></div>
+        </div>
+        <div class="availability-card">
+          <div><span class="pulse"></span><span>Available now</span></div>
+          <strong id="availableNowCount">Checking…</strong>
+        </div>
+      </div>
+    </section>
+
+    <section class="schedule-section" id="schedule" aria-labelledby="schedule-heading">
+      <div class="section-heading">
+        <div>
+          <div class="eyebrow eyebrow-dark"><span></span> Shared live court board</div>
+          <h2 id="schedule-heading">Choose your court time.</h2>
+          <p>Tap an open slot to reserve it. Each booking can be up to 2 hours, with up to 2 active bookings per day, up to 6 months ahead.</p>
+        </div>
+        <div class="section-heading-actions">
+          <button class="button button-ghost issue-button" id="reportIssueButton" type="button">Update court status</button>
+          <button class="button button-dark" id="scheduleBookButton" type="button">+ New booking</button>
+        </div>
+      </div>
+
+      <aside class="service-status checking" id="serviceStatus" role="status" aria-live="polite">
+        <span class="status-dot"></span>
+        <span>Connecting to the shared booking service…</span>
+      </aside>
+
+      <section class="my-bookings" id="myBookingsPanel" aria-labelledby="myBookingsHeading" hidden>
+        <div class="my-bookings-header">
+          <div><span>Your court time</span><h3 id="myBookingsHeading">Your bookings and notices</h3></div>
+          <div class="my-bookings-header-actions">
+            <button class="notice-reset-button" id="resetNoticesButton" type="button" hidden>Move notices to history</button>
+            <button class="notification-button" id="enablePingsButton" type="button">🔔 Enable browser reminder</button>
+          </div>
+        </div>
+        <div class="my-bookings-list" id="myBookingsList"></div>
+      </section>
+
+      <details class="booking-history" id="bookingHistoryPanel" hidden>
+        <summary><span>Booking history</span><strong id="bookingHistoryCount">0 records</strong></summary>
+        <div class="booking-history-body">
+          <p>Past, canceled, affected, and manually cleared notices live here temporarily.</p>
+          <div class="my-bookings-list" id="bookingHistoryList"></div>
+          <button class="delete-history-button" id="deleteHistoryButton" type="button">Delete all history forever</button>
+        </div>
+      </details>
+
+      <section class="court-status-panel" id="courtStatusPanel" aria-labelledby="courtStatusHeading">
+        <div class="court-status-heading">
+          <div><span>Community updated</span><h3 id="courtStatusHeading">Current court status</h3></div>
+          <div class="court-status-heading-actions"><strong id="courtStatusCount">Checking…</strong><button class="notice-reset-button" id="statusPanelReportButton" type="button">Report down or open</button></div>
+        </div>
+        <div class="court-status-list" id="courtStatusList" aria-live="polite"></div>
+      </section>
+
+      <div class="date-toolbar">
+        <button class="icon-button" id="previousDay" type="button" aria-label="Previous day">←</button>
+        <button class="date-display" id="dateDisplay" type="button" aria-label="Choose date">
+          <span class="date-kicker" id="dateKicker">Today</span>
+          <strong id="selectedDateLabel">Loading date…</strong>
+          <span class="calendar-icon" aria-hidden="true">▦</span>
+        </button>
+        <input type="date" id="datePicker" class="visually-hidden" aria-label="Select booking date" />
+        <button class="icon-button" id="nextDay" type="button" aria-label="Next day">→</button>
+        <div class="toolbar-spacer"></div>
+        <div class="legend" aria-label="Schedule legend">
+          <span><i class="legend-booked"></i> Reserved</span>
+          <span><i class="legend-yours"></i> Your booking</span>
+          <span><i class="legend-priority"></i> Priority booking</span>
+          <span><i class="legend-maintenance"></i> Maintenance / closed</span>
+        </div>
+      </div>
+
+      <aside class="weather-advisory loading" id="weatherAdvisory" aria-live="polite">
+        <span class="weather-icon" id="weatherIcon" aria-hidden="true">◌</span>
+        <div><strong id="weatherTitle">Checking court weather…</strong><span id="weatherMessage">Loading the latest Chelmsford forecast.</span></div>
+        <span class="weather-meta" id="weatherMeta">Open-Meteo</span>
+      </aside>
+
+      <div class="window-message" id="windowMessage" hidden>Bookings are only available up to 6 months in advance.</div>
+
+      <div class="schedule-shell">
+        <div class="schedule-scroll" id="scheduleScroll">
+          <div class="schedule-grid" id="scheduleGrid" aria-label="24-hour tennis court reservation schedule"></div>
+        </div>
+        <div class="schedule-footer">
+          <span class="desktop-scroll-note">Scroll to see all 24 hours</span>
+          <span class="mobile-scroll-note">Swipe sideways for all 6 courts ↔</span>
+          <button class="jump-now" id="jumpNowButton" type="button"><span class="pulse"></span> Jump to now</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="priority-section" id="priority" aria-labelledby="priority-heading">
+      <div class="priority-heading">
+        <div class="eyebrow eyebrow-dark"><span></span> Planned priority access</div>
+        <h2 id="priority-heading">School and program holds.</h2>
+        <p>Priority access requests: CHS teams, instructors, and school programs can request recurring court holds. These requests can be reviewed or approved by a designated school contact.</p>
+      </div>
+
+      <div class="priority-grid">
+        <article class="priority-card">
+          <span class="priority-tag">Activities, clinics & tournaments</span>
+          <h3>Request recurring court time</h3>
+          <p>For instructors and organizers who need the same court time across several days.</p>
+          <ul>
+            <li>Include accurate organizer and activity details</li>
+            <li>Choose the courts, dates, times, and repeating days</li>
+            <li>The submitted hold appears on the shared calendar immediately</li>
+          </ul>
+          <div class="reviewer-line"><strong>Advance setup</strong><span>Once submitted, the hold automatically appears on the shared calendar—no real-time intervention is needed for public bookings.</span></div>
+          <button class="button button-dark" id="programRequestButton" type="button">Request activities hold</button>
+        </article>
+
+        <article class="priority-card priority-card-school">
+          <span class="priority-tag">CHS teams & school programs</span>
+          <h3>Practices, matches & tryouts</h3>
+          <p>CHS schedule holds can be entered manually for practices, matches, tryouts, tournaments, and school programs.</p>
+          <ul class="school-hold-points">
+            <li>Plan practices, matches, tryouts, and school events in advance</li>
+            <li>Selected courts and times appear clearly as priority bookings</li>
+            <li>If public time is displaced, the system looks for a similar same-day replacement</li>
+          </ul>
+          <div class="reviewer-line reviewer-line-school"><strong>Set once, run automatically</strong><span>Submitted holds block the selected courts and times without requiring someone to supervise each public booking.</span></div>
+          <button class="button button-primary" id="schoolRequestButton" type="button">Request CHS schedule hold</button>
+        </article>
+      </div>
+    </section>
+
+    <section class="rules-section" id="guidelines" aria-labelledby="rules-heading">
+      <div class="rules-intro">
+        <div class="eyebrow eyebrow-light"><span></span> Play fair</div>
+        <h2 id="rules-heading">A few rules.<br /><em>A lot more tennis.</em></h2>
+        <p>These courts are shared by everyone. A little courtesy keeps them moving.</p>
+        <aside class="etiquette-note">
+          <strong>Please use the courts as intended</strong>
+          <span>Pickleball should not be played on the tennis courts. During a CHS match, game, or practice, please walk around—not through—the tennis courts to reach the pickleball or basketball courts.</span>
+        </aside>
+      </div>
+      <div class="rule-list">
+        <article><span class="rule-number">01</span><div><h3>Two hours per booking</h3><p>Each reservation can be 30 minutes to 2 hours long.</p></div></article>
+        <article><span class="rule-number">02</span><div><h3>Two active bookings per day</h3><p>You may hold up to 2 active bookings on the same calendar day. A canceled or completed booking frees that slot.</p></div></article>
+        <article><span class="rule-number">03</span><div><h3>Cancel when plans change</h3><p>Can’t make it? Please cancel your booking so another player can use the court.</p></div></article>
+        <article><span class="rule-number">04</span><div><h3>Plan up to 6 months ahead</h3><p>Public reservations stay within a practical, configurable booking window.</p></div></article>
+        <article><span class="rule-number">05</span><div><h3>Check the conditions</h3><p>Weather guidance is advisory. Do not use wet, icy, damaged, or otherwise unsafe courts.</p></div></article>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <a class="brand footer-brand" href="#top"><span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 42 42"><circle cx="21" cy="21" r="17"/><path d="M9.3 13.5c8.1 2.8 16 10.5 19.2 19.2M32.7 9.3c-5.4 6.2-14 8.9-23.4 6.6"/></svg></span><span><strong>CHS</strong> Courts</span></a>
+    <p>Tennis at Chelmsford High School</p><p>24-hour schedule · Six CHS courts</p>
+  </footer>
+
+  <dialog class="booking-dialog" id="bookingDialog" aria-labelledby="bookingDialogTitle">
+    <form method="dialog" id="bookingForm" novalidate>
+      <div class="dialog-header">
+        <div><span class="dialog-kicker">Court reservation</span><h2 id="bookingDialogTitle">Book your court</h2></div>
+        <button class="close-button" type="button" id="closeDialog" aria-label="Close booking form">×</button>
+      </div>
+      <div class="dialog-summary"><span class="summary-date" id="summaryDate"></span><span class="summary-dot">·</span><span id="summaryDuration">Up to 2 hours</span></div>
+      <div class="form-grid">
+        <label><span>Your name</span><input type="text" id="bookerName" placeholder="First and last name" autocomplete="name" maxlength="80" required /><small class="field-error" id="nameError"></small></label>
+        <label><span>Court</span><select id="courtSelect" required><option value="1">Court 1</option><option value="2">Court 2</option><option value="3">Court 3</option><option value="4">Court 4</option><option value="5">Court 5</option><option value="6">Court 6</option></select></label>
+        <label><span>Start time</span><select id="startTime" required></select></label>
+        <label><span>Duration</span><select id="durationSelect" required><option value="30">30 minutes</option><option value="60">1 hour</option><option value="90">1½ hours</option><option value="120" selected>2 hours</option></select></label>
+      </div>
+      <div class="availability-message" id="availabilityMessage" role="status"></div>
+      <div class="dialog-weather" id="bookingWeatherAdvisory" hidden><strong id="bookingWeatherTitle"></strong><span id="bookingWeatherMessage"></span></div>
+      <label class="agreement"><input type="checkbox" id="agreement" required /><span>If my plans change, I’ll cancel this booking so someone else can play.</span></label>
+      <small class="field-error" id="agreementError"></small>
+      <label class="reminder-option"><input type="checkbox" id="reminderOptIn" checked /><span><strong>Set a browser reminder</strong><small>A browser notification 15 minutes before your court time while this site is open. No phone number needed.</small></span></label>
+      <div class="dialog-actions"><button type="button" class="button button-ghost" id="cancelDialog">Cancel</button><button type="submit" class="button button-primary confirm-button">Confirm booking <span>→</span></button></div>
+    </form>
+  </dialog>
+
+  <dialog class="booking-dialog priority-dialog" id="priorityDialog" aria-labelledby="priorityDialogTitle">
+    <form method="dialog" id="priorityForm" novalidate>
+      <div class="dialog-header">
+        <div><span class="dialog-kicker">Priority access request</span><h2 id="priorityDialogTitle">Recurring court time</h2></div>
+        <button class="close-button" type="button" id="closePriorityDialog" aria-label="Close priority request">×</button>
+      </div>
+      <p class="priority-dialog-note">Submitting creates a shared priority booking immediately. An administrator can still review or remove it later.</p>
+      <input type="hidden" id="priorityRequestType" value="activity" />
+      <div class="form-grid priority-form-grid">
+        <label><span>Activity label</span><input type="text" id="priorityProgramName" placeholder="Clinic or CHS Tennis Practice" maxlength="120" required /></label>
+        <label><span>Activity type</span><select id="priorityActivityKind"><option value="clinic">Clinic</option><option value="tournament">Tournament</option><option value="school_program">School Program</option><option value="chs_practice">CHS Tennis Practice</option><option value="chs_match">CHS Tennis Match</option><option value="other">Other activity</option></select></label>
+        <label><span>Organizer or staff name</span><input type="text" id="priorityInstructorName" placeholder="Full name" required /></label>
+        <label><span>Public listing <small>(optional)</small></span><input type="url" id="priorityListingUrl" placeholder="https://organization.org/activity" /></label>
+        <label><span>Court coverage</span><select id="priorityCourt" required><option value="1">Court 1</option><option value="2">Court 2</option><option value="3">Court 3</option><option value="4">Court 4</option><option value="5">Court 5</option><option value="6">Court 6</option><option value="all">All 6 courts</option></select></label>
+        <label><span>First date</span><input type="date" id="priorityStartDate" required /></label>
+        <label><span>Last date</span><input type="date" id="priorityEndDate" required /></label>
+        <label><span>Start time</span><input type="time" id="priorityStartTime" value="15:00" required /></label>
+        <label><span>End time</span><input type="time" id="priorityEndTime" value="17:00" required /></label>
+      </div>
+      <fieldset class="priority-days"><legend>Repeats on</legend><label><input type="checkbox" value="1" checked /> Mon</label><label><input type="checkbox" value="2" checked /> Tue</label><label><input type="checkbox" value="3" checked /> Wed</label><label><input type="checkbox" value="4" checked /> Thu</label><label><input type="checkbox" value="5" checked /> Fri</label><label><input type="checkbox" value="6" /> Sat</label><label><input type="checkbox" value="0" /> Sun</label></fieldset>
+      <label class="agreement priority-agreement"><input type="checkbox" id="priorityAccuracy" required /><span>I confirm this is a real activity or school program and that the requested dates are accurate.</span></label>
+      <small class="field-error" id="priorityError"></small>
+      <div class="dialog-actions"><button type="button" class="button button-ghost" id="cancelPriorityDialog">Cancel</button><button type="submit" class="button button-primary confirm-button">Submit request <span>→</span></button></div>
+    </form>
+  </dialog>
+
+  <dialog class="booking-dialog maintenance-dialog" id="maintenanceDialog" aria-labelledby="maintenanceDialogTitle">
+    <form method="dialog" id="maintenanceForm" novalidate>
+      <div class="dialog-header">
+        <div><span class="dialog-kicker">Community court status</span><h2 id="maintenanceDialogTitle">Report courts down or open</h2></div>
+        <button class="close-button" type="button" id="closeMaintenanceDialog" aria-label="Close court status form">×</button>
+      </div>
+      <p class="priority-dialog-note">Choose the courts you can observe. Changes appear immediately for everyone and do not need approval.</p>
+      <div class="form-grid">
+        <fieldset class="status-choice span-two" id="courtStatusAction"><legend>What is the current status?</legend><label><input type="radio" name="courtStatusAction" value="down" checked /><span><strong>Down</strong><small>Unavailable for booking</small></span></label><label><input type="radio" name="courtStatusAction" value="open" /><span><strong>Open</strong><small>Available for booking again</small></span></label></fieldset>
+        <fieldset class="public-court-selection span-two" id="maintenanceCourts"><legend>Courts affected</legend><label><input type="checkbox" value="all" /> All 6 courts</label><label><input type="checkbox" value="1" /> Court 1</label><label><input type="checkbox" value="2" /> Court 2</label><label><input type="checkbox" value="3" /> Court 3</label><label><input type="checkbox" value="4" /> Court 4</label><label><input type="checkbox" value="5" /> Court 5</label><label><input type="checkbox" value="6" /> Court 6</label></fieldset>
+        <label class="span-two"><span id="maintenanceReasonLabel">Why are the courts unavailable?</span><textarea id="maintenanceReason" placeholder="Broken net, standing water, cracked surface…" maxlength="300" required></textarea></label>
+      </div>
+      <small class="field-error" id="maintenanceError"></small>
+      <div class="dialog-actions"><button type="button" class="button button-ghost" id="cancelMaintenanceDialog">Cancel</button><button type="submit" class="button button-primary confirm-button" id="saveCourtStatusButton">Mark courts down <span>→</span></button></div>
+    </form>
+  </dialog>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"><span class="toast-icon">✓</span><div><strong>Saved</strong><span id="toastMessage"></span></div><button id="toastClose" type="button" aria-label="Dismiss notification">×</button></div>
+  <script src="app.js"></script>
+</body>
+</html>

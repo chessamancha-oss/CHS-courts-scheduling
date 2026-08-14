@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /admin-login
+Disallow: /api/
+Disallow: /admin-api/
+
+Sitemap: https://chelmsfordcourts.com/sitemap.xml

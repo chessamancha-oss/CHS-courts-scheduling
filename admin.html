@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#102a27" />
+  <meta name="robots" content="noindex,nofollow" />
+  <title>CHS Courts — Admin Portal</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="admin.css" />
+</head>
+<body class="admin-body">
+  <header class="topbar admin-topbar">
+    <a class="brand" href="/" aria-label="Return to CHS Courts">
+      <span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 42 42"><circle cx="21" cy="21" r="17"/><path d="M9.3 13.5c8.1 2.8 16 10.5 19.2 19.2M32.7 9.3c-5.4 6.2-14 8.9-23.4 6.6"/></svg></span>
+      <span><strong>CHS</strong> Courts</span>
+    </a>
+    <span class="admin-badge">Admin Portal</span>
+    <a class="admin-public-link" href="/">View public site ↗</a>
+  </header>
+
+  <main class="admin-main">
+    <section class="admin-hero">
+      <div>
+        <span class="admin-kicker">Protected management & diagnostics</span>
+        <h1>Set it up.<br /><em>Let it run.</em></h1>
+        <p>Manage planned holds, maintenance, affected bookings, and site settings. Regular player bookings remain automatic and never wait for admin approval.</p>
+      </div>
+      <aside class="owner-card" aria-live="polite">
+        <span>Signed in as</span>
+        <strong id="adminEmail">Checking secure session…</strong>
+        <small id="adminRole">Protected admin session</small>
+        <a id="logoutLink" href="#" hidden>Sign out</a>
+      </aside>
+    </section>
+
+    <section class="admin-purpose-note">
+      <strong>Public bookings remain automatic</strong>
+      <span>The Admin Portal is for schedule setup, maintenance, affected-booking review, testing, and rare exceptions—not routine approval of player bookings.</span>
+    </section>
+
+    <section class="admin-alert" id="adminAlert" hidden role="alert"><strong id="adminAlertTitle">Admin setup required</strong><span id="adminAlertMessage"></span></section>
+
+    <section class="admin-stats" aria-label="Current site summary">
+      <article><span>Active bookings</span><strong id="activeBookingsStat">—</strong></article>
+      <article><span>Priority submissions</span><strong id="pendingRequestsStat">—</strong></article>
+      <article><span>Active closures</span><strong id="activeClosuresStat">—</strong></article>
+      <article><span>Courts down</span><strong id="courtsDownStat">—</strong></article>
+      <article><span>Affected bookings</span><strong id="affectedBookingsStat">—</strong></article>
+    </section>
+
+    <section class="admin-panel" aria-labelledby="bookingsHeading">
+      <div class="admin-panel-heading">
+        <div><span class="admin-kicker">Shared storage</span><h2 id="bookingsHeading">Current bookings</h2></div>
+        <div class="admin-controls">
+          <label><span>From</span><input type="date" id="bookingFrom" /></label>
+          <label><span>To</span><input type="date" id="bookingTo" /></label>
+          <button class="button button-dark" id="refreshAdmin" type="button">Refresh</button>
+        </div>
+      </div>
+      <p class="admin-panel-copy">Use admin cancellation only for rare exceptions. Players can create and cancel their own reservations without intervention.</p>
+      <div class="data-list" id="bookingList"><p class="admin-empty">Loading shared bookings…</p></div>
+    </section>
+
+    <section class="admin-panel" aria-labelledby="courtStatusAdminHeading">
+      <div class="admin-panel-heading"><div><span class="admin-kicker">Community-powered availability</span><h2 id="courtStatusAdminHeading">Court status</h2></div></div>
+      <p class="admin-panel-copy">Public down/open reports take effect immediately. Use this area to review recent changes, correct a status, or remove an individual report. Reopened reports are automatically deleted after 24 hours.</p>
+      <div class="status-admin-grid">
+        <form class="management-form status-admin-form" id="courtStatusForm">
+          <label class="span-two"><span>Status</span><select id="adminCourtStatusAction"><option value="down">Down / unavailable</option><option value="open">Open / available</option></select></label>
+          <label class="span-two"><span>Reason or status note</span><textarea id="adminCourtStatusReason" placeholder="Admin status update" maxlength="300"></textarea></label>
+          <fieldset class="selection-field span-two" id="adminStatusCourts"><legend>Courts</legend><label><input type="checkbox" value="all" /> Entire facility</label><label><input type="checkbox" value="1" /> 1</label><label><input type="checkbox" value="2" /> 2</label><label><input type="checkbox" value="3" /> 3</label><label><input type="checkbox" value="4" /> 4</label><label><input type="checkbox" value="5" /> 5</label><label><input type="checkbox" value="6" /> 6</label></fieldset>
+          <small class="field-error span-two" id="courtStatusError"></small>
+          <button class="button button-primary span-two" type="submit">Apply shared status</button>
+        </form>
+        <div>
+          <h3 class="status-list-title">Current status</h3>
+          <div class="current-status-list" id="adminCurrentStatusList"><p class="admin-empty">Loading court status…</p></div>
+        </div>
+      </div>
+      <div class="status-history-heading"><h3>Recent status reports</h3><span>Open reports and the reports they resolve are kept for 24 hours.</span></div>
+      <div class="status-history-list" id="courtStatusHistoryList"><p class="admin-empty">Loading status history…</p></div>
+    </section>
+
+    <section class="admin-grid">
+      <section class="admin-panel" aria-labelledby="closureHeading">
+        <div class="admin-panel-heading"><div><span class="admin-kicker">Safety & maintenance</span><h2 id="closureHeading">Add maintenance closure</h2></div></div>
+        <p class="admin-panel-copy">Close one court, several courts, or the full facility. Conflicting player bookings are automatically canceled, freed from the daily limit, and added to the affected list.</p>
+        <form class="management-form" id="closureForm">
+          <label class="span-two"><span>Closure title</span><input id="closureTitle" type="text" placeholder="Broken net" maxlength="120" required /></label>
+          <label class="span-two"><span>Reason shown to affected players</span><textarea id="closureReason" placeholder="Court 3 is unsafe until the net post is repaired." maxlength="500" required></textarea></label>
+          <label><span>First date</span><input id="closureStartDate" type="date" required /></label>
+          <label><span>Last date</span><input id="closureEndDate" type="date" required /></label>
+          <label><span>Start time</span><input id="closureStartTime" type="time" value="00:00" required /></label>
+          <label><span>End time</span><input id="closureEndTime" type="time" value="23:59" required /></label>
+          <fieldset class="selection-field span-two" id="closureCourts"><legend>Courts to close</legend><label><input type="checkbox" value="all" /> Entire facility</label><label><input type="checkbox" value="1" /> 1</label><label><input type="checkbox" value="2" /> 2</label><label><input type="checkbox" value="3" /> 3</label><label><input type="checkbox" value="4" /> 4</label><label><input type="checkbox" value="5" /> 5</label><label><input type="checkbox" value="6" /> 6</label></fieldset>
+          <small class="field-error span-two" id="closureError"></small>
+          <button class="button button-primary span-two" type="submit">Create shared closure</button>
+        </form>
+      </section>
+
+      <section class="admin-panel" aria-labelledby="closureListHeading">
+        <div class="admin-panel-heading"><div><span class="admin-kicker">Scheduled closures</span><h2 id="closureListHeading">Maintenance calendar</h2></div></div>
+        <div class="compact-list" id="closureList"><p class="admin-empty">Loading closures…</p></div>
+      </section>
+    </section>
+
+    <section class="admin-grid">
+      <section class="admin-panel" aria-labelledby="holdHeading">
+        <div class="admin-panel-heading"><div><span class="admin-kicker">CHS & approved programs</span><h2 id="holdHeading">Add priority hold</h2></div></div>
+        <p class="admin-panel-copy">Enter practices, matches, clinics, tournaments, or school programs ahead of time. The shared calendar blocks them automatically.</p>
+        <form class="management-form" id="holdForm">
+          <label class="span-two"><span>Calendar label</span><input id="holdLabel" type="text" placeholder="CHS Tennis Practice" maxlength="120" required /></label>
+          <label class="span-two"><span>Activity type</span><select id="holdKind"><option value="chs_practice">CHS Tennis Practice</option><option value="chs_match">CHS Tennis Match</option><option value="clinic">Clinic</option><option value="tournament">Tournament</option><option value="school_program">School Program</option><option value="other">Other</option></select></label>
+          <label><span>First date</span><input id="holdStartDate" type="date" required /></label>
+          <label><span>Last date</span><input id="holdEndDate" type="date" required /></label>
+          <label><span>Start time</span><input id="holdStartTime" type="time" value="14:00" required /></label>
+          <label><span>End time</span><input id="holdEndTime" type="time" value="17:00" required /></label>
+          <fieldset class="selection-field span-two" id="holdCourts"><legend>Courts</legend><label><input type="checkbox" value="all" /> All 6</label><label><input type="checkbox" value="1" /> 1</label><label><input type="checkbox" value="2" /> 2</label><label><input type="checkbox" value="3" /> 3</label><label><input type="checkbox" value="4" /> 4</label><label><input type="checkbox" value="5" /> 5</label><label><input type="checkbox" value="6" /> 6</label></fieldset>
+          <fieldset class="selection-field span-two" id="holdWeekdays"><legend>Repeats on</legend><label><input type="checkbox" value="1" checked /> Mon</label><label><input type="checkbox" value="2" checked /> Tue</label><label><input type="checkbox" value="3" checked /> Wed</label><label><input type="checkbox" value="4" checked /> Thu</label><label><input type="checkbox" value="5" checked /> Fri</label><label><input type="checkbox" value="6" /> Sat</label><label><input type="checkbox" value="0" /> Sun</label></fieldset>
+          <small class="field-error span-two" id="holdError"></small>
+          <button class="button button-primary span-two" type="submit">Create shared priority hold</button>
+        </form>
+      </section>
+
+      <section class="admin-panel" aria-labelledby="holdListHeading">
+        <div class="admin-panel-heading"><div><span class="admin-kicker">Scheduled priority</span><h2 id="holdListHeading">Priority calendar</h2></div></div>
+        <div class="compact-list" id="holdList"><p class="admin-empty">Loading holds…</p></div>
+      </section>
+    </section>
+
+    <section class="admin-panel" aria-labelledby="requestsHeading">
+      <div class="admin-panel-heading"><div><span class="admin-kicker">Designated-contact workflow</span><h2 id="requestsHeading">Priority access requests</h2></div></div>
+      <p class="admin-panel-copy">Public honor-system submissions create shared holds immediately. Use this area for oversight and the priority calendar above to remove a hold when necessary.</p>
+      <div class="request-list" id="requestList"><p class="admin-empty">Loading priority requests…</p></div>
+    </section>
+
+    <section class="admin-panel affected-panel" aria-labelledby="affectedHeading">
+      <div class="admin-panel-heading"><div><span class="admin-kicker">Automatic conflict handling</span><h2 id="affectedHeading">Affected bookings</h2></div></div>
+      <div class="data-list" id="affectedList"><p class="admin-empty">Loading affected bookings…</p></div>
+    </section>
+
+    <section class="admin-grid">
+      <section class="admin-panel" aria-labelledby="settingsHeading">
+        <div class="admin-panel-heading"><div><span class="admin-kicker">Configurable limits</span><h2 id="settingsHeading">Booking windows</h2></div></div>
+        <form class="management-form" id="settingsForm">
+          <label><span>Public booking days</span><input id="publicBookingDays" type="number" min="30" max="365" required /></label>
+          <label><span>Admin / priority days</span><input id="priorityBookingDays" type="number" min="30" max="365" required /></label>
+          <label class="span-two"><span>Reason for change</span><input id="settingsReason" type="text" placeholder="Six-month public window confirmed" required /></label>
+          <small class="field-error span-two" id="settingsError"></small>
+          <button class="button button-primary span-two" type="submit">Save booking windows</button>
+        </form>
+      </section>
+
+      <section class="admin-panel" aria-labelledby="debugHeading">
+        <div class="admin-panel-heading"><div><span class="admin-kicker">Development & testing</span><h2 id="debugHeading">Site state</h2></div></div>
+        <div class="debug-box" id="debugBox">Loading database status…</div>
+        <p class="reviewer-footnote">Access is controlled by Cloudflare Access plus the server-side <code>ADMIN_EMAILS</code> allowlist. This page is not part of the public booking flow.</p>
+      </section>
+    </section>
+
+    <section class="admin-panel lifecycle-panel" aria-labelledby="lifecycleHeading">
+      <div class="admin-panel-heading">
+        <div><span class="admin-kicker">Automatic retention & manual reset</span><h2 id="lifecycleHeading">Data lifecycle</h2></div>
+      </div>
+      <p class="admin-panel-copy">Past data cleans itself up over time. Manual cleanup never removes active bookings, future maintenance closures, future priority holds, pending requests, or booking-window settings.</p>
+      <div class="retention-summary" aria-label="Automatic retention periods">
+        <span><strong>24 hours</strong> resolved court-status reports</span>
+        <span><strong>90 days</strong> ordinary booking history</span>
+        <span><strong>180 days</strong> affected bookings</span>
+        <span><strong>180 days</strong> expired calendars, reviewed requests & activity</span>
+      </div>
+      <div class="cleanup-actions">
+        <button class="button button-dark" type="button" data-cleanup-action="safe_cleanup">Run safe cleanup now</button>
+        <button class="cleanup-button" type="button" data-cleanup-action="clear_affected_history">Clear affected-booking history</button>
+        <button class="cleanup-button" type="button" data-cleanup-action="clear_calendar_history">Clear expired calendar history</button>
+        <button class="cleanup-button" type="button" data-cleanup-action="clear_recent_activity">Reset recent admin activity</button>
+        <button class="cleanup-button cleanup-danger" type="button" data-cleanup-action="clear_archived_storage">Clear all archived shared data</button>
+      </div>
+      <p class="cleanup-note">“Clear all archived shared data” deletes only completed/canceled bookings, reviewed requests, and expired/removed schedule blocks. Live scheduling data stays intact.</p>
+    </section>
+
+    <section class="admin-panel" aria-labelledby="auditHeading">
+      <div class="admin-panel-heading"><div><span class="admin-kicker">Accountability</span><h2 id="auditHeading">Recent admin activity</h2></div></div>
+      <div class="audit-list" id="auditList"><p class="admin-empty">Loading activity…</p></div>
+    </section>
+  </main>
+
+  <div class="toast" id="adminToast" role="status" aria-live="polite"><span class="toast-icon">✓</span><div><strong id="adminToastTitle">Saved</strong><span id="adminToastMessage"></span></div><button id="adminToastClose" type="button" aria-label="Dismiss notification">×</button></div>
+  <script src="admin.js"></script>
+</body>
+</html>

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#102a27" />
+  <meta name="robots" content="noindex,nofollow" />
+  <title>CHS Courts — Admin Sign In</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="admin.css" />
+</head>
+<body class="login-body">
+  <main class="login-shell">
+    <a class="brand login-brand" href="/" aria-label="Return to CHS Courts">
+      <span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 42 42"><circle cx="21" cy="21" r="17"/><path d="M9.3 13.5c8.1 2.8 16 10.5 19.2 19.2M32.7 9.3c-5.4 6.2-14 8.9-23.4 6.6"/></svg></span>
+      <span><strong>CHS</strong> Courts</span>
+    </a>
+    <section class="login-card" aria-labelledby="loginHeading">
+      <span class="admin-kicker">Temporary protected access</span>
+      <h1 id="loginHeading">Admin Portal</h1>
+      <p>Sign in with your administrator email and its password configured in Cloudflare.</p>
+      <form id="adminLoginForm">
+        <label><span>Administrator email</span><input id="adminLoginEmail" type="email" autocomplete="username" required /></label>
+        <label><span>Password</span><input id="adminLoginPassword" type="password" autocomplete="current-password" required /></label>
+        <small class="field-error" id="adminLoginError" role="alert"></small>
+        <button class="button button-primary" type="submit">Sign in securely</button>
+      </form>
+      <aside class="login-security-note"><strong>Temporary setup</strong><span>This is server-side, cookie-based protection for the free pages.dev address. Move to Cloudflare Access if a custom domain is connected later.</span></aside>
+      <a class="login-back" href="/">← Return to public schedule</a>
+    </section>
+  </main>
+  <script src="admin-login.js"></script>
+</body>
+</html>
