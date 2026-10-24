@@ -228,7 +228,13 @@
       <label class="agreement"><input type="checkbox" id="agreement" required /><span>If my plans change, I’ll cancel this booking so someone else can play.</span></label>
       <small class="field-error" id="agreementError"></small>
       <label class="reminder-option"><input type="checkbox" id="reminderOptIn" checked /><span><strong>Set a browser reminder</strong><small>A browser notification 15 minutes before your court time while this site is open. No phone number needed.</small></span></label>
-      <div class="dialog-actions"><button type="button" class="button button-ghost" id="cancelDialog">Cancel</button><button type="submit" class="button button-primary confirm-button">Confirm booking <span>→</span></button></div>
+      <div class="dialog-actions"><button type="button" class="button button-ghost" id="cancelDialog">Cancel</button><button
+        type="submit"
+        class="button button-primary confirm-button"
+        id="confirmBookingButton"
+      >
+        Confirm booking <span>→</span>
+      </button></div>
     </form>
   </dialog>
 
@@ -276,6 +282,7 @@
   </dialog>
 
   <div class="toast" id="toast" role="status" aria-live="polite"><span class="toast-icon">✓</span><div><strong>Saved</strong><span id="toastMessage"></span></div><button id="toastClose" type="button" aria-label="Dismiss notification">×</button></div>
+  <script src="booking-logic.js"></script>
   <script src="app.js"></script>
 </body>
 </html>

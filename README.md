@@ -12,6 +12,12 @@ Tennis-only reservation site for the six Chelmsford High School courts.
 - `DEPLOYMENT.md`: Cloudflare custom-domain and Google indexing steps
 - `_headers`: forces Admin Portal pages to render inline as HTML instead of downloading
 
+## Recent contribution
+
+The booking logic now enforces the daily active-booking limit consistently, ignores canceled bookings when checking schedule conflicts, and runs its test cases only under Node while returning a failing exit code when an expectation is wrong. The booking form disables confirmation when its current selection is invalid, and the local test server serves `booking-logic.js` as a browser asset.
+
+These changes were made with AI assistance (GitHub Copilot). The project maintainer is responsible for reviewing, testing, and deciding whether to deploy them.
+
 The D1 binding must be named `DB`. Real bookings never fall back to local-only storage. For temporary pages.dev admin access, configure `ADMIN_SESSION_SECRET` plus either the backward-compatible `ADMIN_EMAILS`/`ADMIN_PASSWORD` pair or an encrypted `ADMIN_CREDENTIALS` JSON object for separate per-email passwords.
 
 The public schedule silently refreshes shared bookings, holds, closures, and court status every 10 seconds. The Admin Portal refreshes every 15 seconds, pauses while an admin has unsaved form edits, and both views sync immediately when their tab regains focus or the browser reconnects.

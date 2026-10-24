@@ -22,6 +22,7 @@ const previousDayButton = $("previousDay");
 const nextDayButton = $("nextDay");
 const bookingDialog = $("bookingDialog");
 const bookingForm = $("bookingForm");
+const confirmBookingButton = $("confirmBookingButton");
 const courtSelect = $("courtSelect");
 const startTime = $("startTime");
 const durationSelect = $("durationSelect");
@@ -306,8 +307,30 @@ function scheduleItems() {
 }
 
 function conflictDetails(court, start, duration) {
-  const conflicts = scheduleItems().filter((item) => item.court === court && overlaps(start, duration, item.start, item.duration));
-  return conflicts.find((item) => item.blockType === "maintenance") || conflicts.find((item) => item.blockType === "priority") || conflicts[0] || null;
+  const proposedStart = Math.round(start * 60);
+  const proposedEnd = Math.round((start + duration) * 60);
+  const proposedDate = dateKey(selectedDate);
+
+  const conflicts = scheduleItems().filter((item) => {
+    const existingStart = Math.round(item.start * 60);
+    const existingEnd = Math.round((item.start + item.duration) * 60);
+
+    return !bookingsDoNotConflict(
+      proposedStart,
+      proposedEnd,
+      existingStart,
+      existingEnd,
+      court,
+      item.court,
+      proposedDate,
+      item.date
+    );
+  });
+
+  return conflicts.find((item) => item.blockType === "maintenance")
+    || conflicts.find((item) => item.blockType === "priority")
+    || conflicts[0]
+    || null;
 }
 
 function buildBookingBlock(item) {
@@ -685,7 +708,19 @@ function validateSelection() {
   if (!Number.isInteger(durationMinutes) || durationMinutes < 30 || durationMinutes > MAX_BOOKING_MINUTES) return { valid: false, message: "Each booking can be up to 2 hours." };
   if (startMinute + durationMinutes > 1440) return { valid: false, message: "This booking would run past midnight. Choose an earlier time or shorter stay." };
   if (selectedStart <= new Date()) return { valid: false, message: "That start time has already passed. Choose a later time." };
-  if (activeBookingsOnSelectedDay().length >= MAX_ACTIVE_BOOKINGS_PER_DAY) {
+  const proposedBooking = {
+    date: dateKey(selectedDate),
+    clientId,
+    status: "active"
+  };
+
+  const personalBookings = myBookings.map((booking) => ({
+    date: booking.date,
+    clientId,
+    status: booking.status
+  }));
+
+  if (!isUnderDailyLimit(proposedBooking, personalBookings)) {
     return { valid: false, message: "You can have up to 2 active bookings per day. Please cancel or complete an existing booking before making another." };
   }
   const conflict = conflictDetails(court, start, duration);
@@ -697,8 +732,13 @@ function validateSelection() {
 
 function updateAvailabilityMessage() {
   const result = validateSelection();
-  availabilityMessage.className = `availability-message ${result.valid ? "available" : "unavailable"}`;
-  availabilityMessage.textContent = `${result.valid ? "✓" : "!"} ${result.message}`;
+  confirmBookingButton.disabled = !result.valid;
+
+  availabilityMessage.className =
+    `availability-message ${result.valid ? "available" : "unavailable"}`;
+
+  availabilityMessage.textContent =
+    `${result.valid ? "✓" : "!"} ${result.message}`;
   const duration = Number(durationSelect.value);
   $("summaryDuration").textContent = duration === 30 ? "30 minutes" : duration === 60 ? "1 hour" : duration === 90 ? "1½ hours" : "2 hours";
   renderBookingWeather();
